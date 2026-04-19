@@ -22,6 +22,16 @@ html {
   scroll-behavior: smooth;
 }
 
+.wheel-logo {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center; /* centra horizontalmente */
+}
+
+.wheel-logo img {
+  width: 950px; /* o el tamaño que quieras */
+}
+
 body {
   font-family: 'Montserrat', sans-serif;
   background:
