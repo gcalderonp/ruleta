@@ -26,8 +26,10 @@ nav {
 }
 
 .logo-img {
-  height: 100px; /* ajusta según tu diseño */
+  display: block;
+  height: 42px;
   width: auto;
+  max-width: 140px;
   object-fit: contain;
 }
 
@@ -117,6 +119,31 @@ nav {
 
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
+
+  .nav-logo {
+    gap: 0;
+  }
+
+  .logo-img {
+    height: 32px;
+    max-width: 110px;
+  }
+
+  .hero {
+    justify-content: flex-start;
+    padding: 100px 16px 48px;
+  }
+
+  .hero-title {
+    font-size: clamp(42px, 13vw, 72px);
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    max-width: 320px;
+    margin-bottom: 36px;
+  }
+  
   .nav-links,
   .nav-cta {
     display: none;
