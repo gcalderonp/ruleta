@@ -25,6 +25,12 @@ nav {
   text-decoration: none;
 }
 
+.logo-img {
+  height: 100px; /* ajusta según tu diseño */
+  width: auto;
+  object-fit: contain;
+}
+
 .nav-logo-mark {
   width: 34px;
   height: 34px;

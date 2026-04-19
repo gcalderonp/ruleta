@@ -5,7 +5,7 @@ const Modal = (() => {
   const descEl   = document.getElementById('modalDesc');
   const stockEl  = document.getElementById('modalStock');
   const claimBtn = document.getElementById('modalClaimBtn');
-  const closeBtn = document.getElementById('modalCloseBtn');
+  //const closeBtn = document.getElementById('modalCloseBtn');
 
   let _currentPrize = null;
   let _onClose = null;
@@ -47,18 +47,18 @@ const Modal = (() => {
 
       hide();
 
-      if (remaining === 0) {
+      /*if (remaining === 0) {
         alert(`¡Premio reclamado! 🎉\n\nMuestra esta pantalla en cualquier sucursal Pepito.\n\n⚠️ Este fue el último "${_currentPrize.label}" disponible.`);
       } else {
         alert(`¡Premio reclamado! 🎉\n\nMuestra esta pantalla en cualquier sucursal Pepito para canjear tu "${_currentPrize.label}".`);
-      }
+      }*/
 
       _currentPrize = null;
     }
   }
 
   function init() {
-    closeBtn.addEventListener('click', hide);
+    //closeBtn.addEventListener('click', hide);
     claimBtn.addEventListener('click', claim);
 
     overlay.addEventListener('click', (e) => {

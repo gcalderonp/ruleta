@@ -117,7 +117,7 @@ const Wheel = (() => {
     ctx.fillStyle    = '#07090f';
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('P', cx, cy + 1);
+    ctx.fillText('A', cx, cy + 1);
   }
 
   function drawEmpty() {
