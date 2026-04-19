@@ -1,6 +1,5 @@
 /**
  * wheel.js — Roulette wheel rendering & spin animation
- * Trabaja con los premios que se le pasen (solo los disponibles).
  */
 
 const Wheel = (() => {
@@ -12,8 +11,57 @@ const Wheel = (() => {
   let spinning = false;
   let hubRadius = 0;
   let hubClickHandler = null;
+  let audioUnlocked = false;
 
-  /* ── Resize canvas to its wrapper ── */
+  /* 🔊 SONIDO */
+  const tickSound = new Audio('./sounds/tick.mp3');
+  tickSound.preload = 'auto';
+  tickSound.volume = 0.55;
+
+  tickSound.addEventListener('canplaythrough', () => {
+    console.log('✅ tick cargado correctamente');
+  });
+
+  tickSound.addEventListener('error', (e) => {
+    console.log('❌ error cargando tick', e);
+  });
+
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+
+    try {
+      tickSound.volume = 0;
+      tickSound.currentTime = 0;
+
+      const p = tickSound.play();
+      if (p && typeof p.then === 'function') {
+        p.then(() => {
+          tickSound.pause();
+          tickSound.currentTime = 0;
+          tickSound.volume = 0.55;
+        }).catch(() => {
+          tickSound.volume = 0.55;
+        });
+      } else {
+        tickSound.pause();
+        tickSound.currentTime = 0;
+        tickSound.volume = 0.55;
+      }
+    } catch {
+      tickSound.volume = 0.55;
+    }
+  }
+
+  function stopTickSound() {
+    try {
+      tickSound.pause();
+      tickSound.currentTime = 0;
+      tickSound.playbackRate = 1;
+    } catch {}
+  }
+
+  /* ── Resize ── */
   function resize() {
     const size = canvas.parentElement.clientWidth;
     const dpr = window.devicePixelRatio || 1;
@@ -30,13 +78,12 @@ const Wheel = (() => {
     draw(currentAngle);
   }
 
-  /* ── Actualizar premios activos y redibujar ── */
   function updatePrizes(prizes) {
     activePrizes = prizes;
     draw(currentAngle);
   }
 
-  /* ── Draw the full wheel ── */
+  /* ── Draw ── */
   function draw(angle) {
     const n = activePrizes.length;
     if (n === 0) {
@@ -57,7 +104,6 @@ const Wheel = (() => {
       const end = start + arc;
       const prize = activePrizes[i];
 
-      /* Segment */
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.arc(cx, cy, r, start, end);
@@ -68,7 +114,6 @@ const Wheel = (() => {
       ctx.lineWidth = 2.5;
       ctx.stroke();
 
-      /* Sheen */
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(cx, cy);
@@ -84,7 +129,6 @@ const Wheel = (() => {
 
       ctx.restore();
 
-      /* Label */
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(start + arc / 2);
@@ -114,7 +158,6 @@ const Wheel = (() => {
       ctx.restore();
     }
 
-    /* Center hub */
     const hubR = r * 0.12;
     hubRadius = hubR + 4;
 
@@ -175,16 +218,13 @@ const Wheel = (() => {
 
     const dx = x - cx;
     const dy = y - cy;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    return distance <= hubRadius;
+    return Math.sqrt(dx * dx + dy * dy) <= hubRadius;
   }
 
   function onHubClick(callback) {
     hubClickHandler = callback;
   }
 
-  /* ── Easing ── */
   function easeOut(t) {
     return 1 - Math.pow(1 - t, 4);
   }
@@ -197,8 +237,8 @@ const Wheel = (() => {
   function getPrizeUnderPointer(prizes, angle) {
     const n = prizes.length;
     const arc = (2 * Math.PI) / n;
-
     const pointerAngle = -Math.PI / 2;
+
     const relative = normalizeAngle(pointerAngle - angle);
     const index = Math.floor(relative / arc) % n;
 
@@ -208,9 +248,23 @@ const Wheel = (() => {
     };
   }
 
+  /* 🔊 sonido desacelerado, sin solaparse */
+  function playTick(progress) {
+    try {
+      tickSound.pause();
+      tickSound.currentTime = 0;
+      tickSound.playbackRate = 1 - progress * 0.15;
+      tickSound.volume = 0.55;
+      tickSound.play().catch(() => {});
+    } catch {}
+  }
+
   /* ── Spin ── */
   function spin(prizes, onComplete) {
     if (spinning || prizes.length === 0) return;
+
+    unlockAudio();
+    stopTickSound();
 
     spinning = true;
     activePrizes = prizes;
@@ -234,10 +288,21 @@ const Wheel = (() => {
     const startAngle = currentAngle;
     const startTime = performance.now();
 
+    let lastTickAt = 0;
+
     function frame(now) {
-      const t = Math.min((now - startTime) / duration, 1);
+      const elapsed = now - startTime;
+      const t = Math.min(elapsed / duration, 1);
+
       currentAngle = startAngle + easeOut(t) * (totalAngle - startAngle);
       draw(currentAngle);
+
+      const tickInterval = 40 + Math.pow(t, 2.2) * 180;
+
+      if (elapsed - lastTickAt >= tickInterval && t < 1) {
+        playTick(t);
+        lastTickAt = elapsed;
+      }
 
       if (t < 1) {
         requestAnimationFrame(frame);
@@ -246,10 +311,9 @@ const Wheel = (() => {
         draw(currentAngle);
         spinning = false;
 
-        const landed = getPrizeUnderPointer(prizes, currentAngle);
+        stopTickSound();
 
-        console.log('Índice sorteado:', winIndex, prizes[winIndex]?.label);
-        console.log('Índice real bajo flecha:', landed.index, landed.prize?.label);
+        const landed = getPrizeUnderPointer(prizes, currentAngle);
 
         if (typeof onComplete === 'function') {
           setTimeout(() => onComplete(landed.prize), 450);
@@ -263,9 +327,13 @@ const Wheel = (() => {
   function init() {
     activePrizes = Stock.getAvailable();
     resize();
+    tickSound.load();
+
     window.addEventListener('resize', resize);
 
     canvas.addEventListener('click', (e) => {
+      unlockAudio();
+
       if (!isClickOnHub(e)) return;
       if (spinning) return;
 
