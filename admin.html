@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cofimar — Panel de Stock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #00a3b4;
+    --gold-dim: rgba(0,163,180,0.14);
+    --dark:  #1e2a26;
+    --dark2: #ffffff;
+    --dark3: #eef3f4;
+    --text:  #1e2a26;
+    --muted: rgba(30,42,38,0.64);
+    --green: #00a3b4;
+    --orange:#3dbcca;
+    --red:   #8a8a8d;
+    --radius: 14px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background:
+      radial-gradient(circle at top center, rgba(0,163,180,0.16) 0%, rgba(0,163,180,0.05) 26%, transparent 52%),
+      linear-gradient(180deg, #fafdfe 0%, #eef5f6 48%, #e8f0f1 100%);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 32px clamp(16px, 4vw, 48px);
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,163,180,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,163,180,0.045) 1px, transparent 1px),
+      radial-gradient(circle at center, rgba(0,163,180,0.06) 0%, transparent 70%);
+    background-size: 48px 48px, 48px 48px, 100% 100%;
+    pointer-events: none; z-index: 0;
+  }
+
+  .page { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; }
+
+  /* Header */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+    margin-bottom: 36px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0,163,180,0.15);
+  }
+
+  .header-left { display: flex; align-items: center; gap: 12px; }
+
+  .logo-mark {
+    width: 38px; height: 38px; border-radius: 9px;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px; color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0,163,180,0.24);
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(22px, 4vw, 30px);
+    letter-spacing: 2px; color: var(--text);
+  }
+  h1 span { color: var(--gold); }
+
+  .badge-admin {
+    background: rgba(0,163,180,0.14);
+    border: 1px solid rgba(0,163,180,0.24);
+    color: var(--gold);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 50px;
+  }
+
+  .header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* Buttons */
+  .btn {
+    border: none; border-radius: 8px;
+    padding: 9px 18px;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: opacity 0.15s, transform 0.15s;
+  }
+  .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .btn-gold  {
+    background: var(--gold);
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(0,163,180,0.22);
+  }
+
+  .btn-ghost {
+    background: rgba(255,255,255,0.72);
+    color: var(--text);
+    border: 1px solid rgba(0,163,180,0.12);
+  }
+
+  .btn-danger {
+    background: rgba(138,138,141,0.12);
+    color: #6a7d79;
+    border: 1px solid rgba(138,138,141,0.22);
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px; margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.84);
+    border: 1px solid rgba(0,163,180,0.10);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    box-shadow: 0 16px 36px rgba(0,0,0,0.04);
+    backdrop-filter: blur(8px);
+  }
+
+  .stat-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .stat-value { font-family: 'Bebas Neue', cursive; font-size: 32px; letter-spacing: 1px; }
+  .stat-value.green  { color: var(--green); }
+  .stat-value.orange { color: var(--orange); }
+  .stat-value.red    { color: var(--red); }
+  .stat-value.gold   { color: var(--gold); }
+
+  /* Table */
+  .table-wrap {
+    background: rgba(255,255,255,0.84);
+    border: 1px solid rgba(0,163,180,0.10);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 16px 36px rgba(0,0,0,0.04);
+    backdrop-filter: blur(8px);
+  }
+
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  thead th {
+    background: var(--dark3);
+    padding: 13px 18px;
+    text-align: left;
+    font-size: 11px; font-weight: 700;
+    color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase;
+    border-bottom: 1px solid rgba(0,163,180,0.10);
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(0,163,180,0.06);
+    transition: background 0.15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(0,163,180,0.04); }
+  tbody tr.row-empty { opacity: 0.5; }
+
+  td { padding: 14px 18px; vertical-align: middle; }
+
+  .td-icon { font-size: 20px; width: 40px; }
+  .td-name { font-weight: 600; }
+
+  /* Progress bar */
+  .progress-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .progress-bar {
+    flex: 1; height: 6px; border-radius: 3px;
+    background: rgba(0,163,180,0.10); overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+  .progress-count { font-size: 13px; font-weight: 600; min-width: 28px; text-align: right; }
+
+  /* Stock controls */
+  .stock-controls {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .stock-controls input[type=number] {
+    width: 64px; padding: 5px 8px;
+    background: rgba(255,255,255,0.78);
+    border: 1px solid rgba(0,163,180,0.14);
+    border-radius: 6px; color: var(--text);
+    font-size: 13px; font-family: inherit;
+    text-align: center;
+  }
+  .stock-controls input[type=number]:focus {
+    outline: none; border-color: rgba(0,163,180,0.4);
+  }
+  .btn-sm {
+    padding: 5px 12px; font-size: 12px;
+    border-radius: 6px;
+  }
+
+  /* Status pill */
+  .pill {
+    display: inline-block;
+    padding: 3px 10px; border-radius: 50px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
+  }
+  .pill-ok     { background: rgba(0,163,180,0.14); color: var(--gold); border: 1px solid rgba(0,163,180,0.22); }
+  .pill-low    { background: rgba(61,188,202,0.14); color: var(--orange); border: 1px solid rgba(61,188,202,0.22); }
+  .pill-empty  { background: rgba(138,138,141,0.12); color: var(--red); border: 1px solid rgba(138,138,141,0.20); }
+
+  /* Log */
+  .log-section { margin-top: 28px; }
+  .log-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 20px; letter-spacing: 2px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .log-box {
+    background: rgba(255,255,255,0.84);
+    border: 1px solid rgba(0,163,180,0.10);
+    border-radius: var(--radius);
+    padding: 16px; max-height: 200px; overflow-y: auto;
+    box-shadow: 0 16px 36px rgba(0,0,0,0.04);
+    backdrop-filter: blur(8px);
+  }
+  .log-entry {
+    font-size: 12px; color: var(--muted);
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(0,163,180,0.06);
+  }
+  .log-entry:last-child { border-bottom: none; }
+  .log-time { color: rgba(0,163,180,0.6); margin-right: 8px; }
+  .log-empty { font-size: 13px; color: rgba(30,42,38,0.35); }
+
+  /* Back link */
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--muted);
+    text-decoration: none;
+    margin-bottom: 28px;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--gold); }
+
+  @media (max-width: 600px) {
+    thead th:nth-child(3), td:nth-child(3) { display: none; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+</head>
+<body>
+  <div class="page">
+
+    <a href="index.html" class="back-link">← Volver a la ruleta</a>
+
+    <header>
+      <div class="header-left">
+        <div class="logo-mark">C</div>
+        <div>
+          <h1>Cofimar</h1>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">Control de inventario de premios</div>
+        </div>
+        <span class="badge-admin">Admin</span>
+      </div>
+      <div class="header-actions">
+        <!-- <button class="btn btn-ghost" onclick="exportData()">⬇ Exportar JSON</button> -->
+        <button class="btn btn-danger" onclick="confirmReset()">↺ Resetear todo</button>
+      </div>
+    </header>
+
+    <!-- Stats -->
+    <div class="stats-row" id="statsRow"></div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Premio</th>
+            <th>Progreso</th>
+            <th>Estado</th>
+            <th>Ajustar stock</th>
+          </tr>
+        </thead>
+        <tbody id="stockTable"></tbody>
+      </table>
+    </div>
+
+    <!-- Log -->
+    <div class="log-section">
+      <div class="log-title">Registro de Cambios</div>
+      <div class="log-box" id="logBox">
+        <div class="log-empty">Sin cambios registrados aún.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/stock.js"></script>
+  <script>
+    const LOG_KEY = 'pepito_admin_log';
+
+    /* ── Helpers ── */
+    function getLog() {
+      try { return JSON.parse(localStorage.getItem(LOG_KEY) || '[]'); }
+      catch { return []; }
+    }
+    function saveLog(log) {
+      localStorage.setItem(LOG_KEY, JSON.stringify(log.slice(-50)));
+    }
+    function addLog(msg) {
+      const log = getLog();
+      const now = new Date().toLocaleTimeString('es-EC', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+      log.push({ time: now, msg });
+      saveLog(log);
+      renderLog();
+    }
+
+    /* ── Render log ── */
+    function renderLog() {
+      const box = document.getElementById('logBox');
+      const log = getLog();
+      if (log.length === 0) {
+        box.innerHTML = '<div class="log-empty">Sin cambios registrados aún.</div>';
+        return;
+      }
+      box.innerHTML = [...log].reverse().map(e =>
+        `<div class="log-entry"><span class="log-time">${e.time}</span>${e.msg}</div>`
+      ).join('');
+    }
+
+    /* ── Stats ── */
+    function renderStats() {
+      const stocks  = Stock.getAll();
+      const all     = PRIZES;
+      const total   = all.reduce((s, p) => s + (stocks[p.label] ?? 0), 0);
+      const initial = all.reduce((s, p) => s + p.stock, 0);
+      const empty   = all.filter(p => (stocks[p.label] ?? 0) === 0).length;
+      const low     = all.filter(p => { const s = stocks[p.label]??0; return s > 0 && s <= 5; }).length;
+
+      document.getElementById('statsRow').innerHTML = `
+        <div class="stat-card">
+          <div class="stat-label">Stock total restante</div>
+          <div class="stat-value gold">${total}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Stock inicial total</div>
+          <div class="stat-value" style="color:var(--muted)">${initial}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Premios agotados</div>
+          <div class="stat-value red">${empty}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Stock crítico (≤5)</div>
+          <div class="stat-value orange">${low}</div>
+        </div>
+      `;
+    }
+
+    /* ── Table ── */
+    function statusPill(stock) {
+      if (stock <= 0)  return `<span class="pill pill-empty">Agotado</span>`;
+      if (stock <= 5)  return `<span class="pill pill-low">Crítico</span>`;
+      return                  `<span class="pill pill-ok">Disponible</span>`;
+    }
+
+function progressColor(pct) {
+  if (pct <= 0)   return '#8a8a8d';
+  if (pct <= 0.2) return '#3dbcca';
+  return '#00a3b4';
+}
+
+    function renderTable() {
+      const stocks = Stock.getAll();
+      const tbody  = document.getElementById('stockTable');
+      tbody.innerHTML = '';
+
+      PRIZES.forEach(prize => {
+        const current = stocks[prize.label] ?? 0;
+        const pct     = prize.stock > 0 ? current / prize.stock : 0;
+        const isEmpty = current <= 0;
+
+        const tr = document.createElement('tr');
+        if (isEmpty) tr.classList.add('row-empty');
+
+        tr.innerHTML = `
+          <td class="td-icon">${prize.icon}</td>
+          <td class="td-name">${prize.label}</td>
+          <td>
+            <div class="progress-wrap">
+              <div class="progress-bar">
+                <div class="progress-fill"
+                     style="width:${Math.max(0,pct)*100}%;background:${progressColor(pct)}"></div>
+              </div>
+              <span class="progress-count" style="color:${progressColor(pct)}">${current}</span>
+            </div>
+          </td>
+          <td>${statusPill(current)}</td>
+          <td>
+            <div class="stock-controls">
+              <input type="number" min="0" max="9999" value="${current}"
+                     id="input-${prize.label.replace(/\s+/g,'_')}" />
+              <button class="btn btn-gold btn-sm"
+                      onclick="setStock('${prize.label}')">Guardar</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* ── Set stock manually ── */
+    function setStock(label) {
+      const key   = label.replace(/\s+/g,'_');
+      const input = document.getElementById(`input-${key}`);
+      const val   = parseInt(input.value, 10);
+      if (isNaN(val) || val < 0) { alert('Valor inválido'); return; }
+
+      const stocks      = Stock.getAll();
+      const oldVal      = stocks[label] ?? 0;
+      stocks[label]     = val;
+      localStorage.setItem('pepito_stock_v1', JSON.stringify(stocks));
+
+      addLog(`"${label}": ${oldVal} → ${val}`);
+      refresh();
+    }
+
+    /* ── Reset ── */
+    function confirmReset() {
+      if (confirm('¿Seguro que deseas resetear TODOS los stocks al valor inicial de data.js?')) {
+        Stock.reset();
+        addLog('⚠️ Reset total de inventario realizado.');
+        refresh();
+      }
+    }
+
+    /* ── Export ── */
+    function exportData() {
+      const data = {
+        exportDate: new Date().toISOString(),
+        stocks: Stock.getAll(),
+        log: getLog(),
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `pepito-stock-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    /* ── Full refresh ── */
+    function refresh() {
+      renderStats();
+      renderTable();
+    }
+
+    /* ── Init ── */
+    renderLog();
+    refresh();
+  </script>
+</body>
+</html>
