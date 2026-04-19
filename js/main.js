@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* Verificar si hay premios disponibles al cargar */
   checkAvailability();
 
-  spinBtn.addEventListener('click', () => {
+  function handleSpin() {
     const available = Stock.getAvailable();
 
     /* Caso: todos los premios agotados */
@@ -31,19 +31,31 @@ document.addEventListener('DOMContentLoaded', () => {
       Modal.show(prize, () => {
         /* Al cerrar el modal, re-evaluar disponibilidad */
         const stillAvailable = Stock.getAvailable();
+
         if (stillAvailable.length === 0) {
           showEmptyState();
         } else {
           spinBtn.disabled = false;
+
           /* Redibujar rueda con premios actualizados */
           Wheel.updatePrizes(stillAvailable);
         }
       });
     });
+  }
+
+  /* Botón normal */
+  spinBtn.addEventListener('click', handleSpin);
+
+  /* Click en el centro de la ruleta */
+  Wheel.onHubClick(() => {
+    if (spinBtn.disabled) return;
+    handleSpin();
   });
 
   function checkAvailability() {
     const available = Stock.getAvailable();
+
     if (available.length === 0) {
       showEmptyState();
     } else {
@@ -54,7 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function showEmptyState() {
     spinBtn.disabled = true;
     spinBtn.textContent = '😢 Premios Agotados';
+
     const hint = document.querySelector('.spin-hint');
-    if (hint) hint.textContent = 'Todos los premios han sido reclamados. ¡Gracias por participar!';
+    if (hint) {
+      hint.textContent =
+        'Todos los premios han sido reclamados. ¡Gracias por participar!';
+    }
   }
 });

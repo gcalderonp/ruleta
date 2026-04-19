@@ -22,8 +22,8 @@
 
 .wheel-outer {
   position: relative;
-  width: clamp(260px, 55vw, 400px);
-  height: clamp(260px, 55vw, 400px);
+  width: clamp(300px, 70vw, 650px);
+  height: clamp(300px, 70vw, 650px);
 }
 
 .wheel-pointer {
@@ -34,10 +34,11 @@
   z-index: 10;
   width: 0;
   height: 0;
-  border-left:  clamp(12px, 2vw, 16px) solid transparent;
+  border-left: clamp(12px, 2vw, 16px) solid transparent;
   border-right: clamp(12px, 2vw, 16px) solid transparent;
-  border-top:   clamp(28px, 4vw, 38px) solid var(--gold);
+  border-top: clamp(28px, 4vw, 38px) solid var(--gold);
   filter: drop-shadow(0 4px 12px rgba(0, 163, 180, 0.45));
+  pointer-events: none;
 }
 
 .wheel-border {
@@ -48,6 +49,7 @@
   box-shadow:
     0 0 60px rgba(0, 163, 180, 0.10),
     inset 0 0 30px rgba(30, 42, 38, 0.08);
+  pointer-events: none;
 }
 
 #wheelCanvas {
