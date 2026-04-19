@@ -92,7 +92,11 @@ const Wheel = (() => {
     }
 
     const arc = (2 * Math.PI) / n;
-    const size = canvas.clientWidth;
+    //const size = canvas.clientWidth;
+    const size = Math.min(
+                  canvas.parentElement.clientWidth,
+                  canvas.parentElement.clientHeight
+                );
     const cx = size / 2;
     const cy = size / 2;
     const r = size / 2 - 2;
@@ -138,7 +142,8 @@ const Wheel = (() => {
       ctx.shadowColor = 'rgba(0,0,0,0.45)';
       ctx.shadowBlur = 2;
 
-      const fontSize = Math.max(10, size * 0.038);
+      //const fontSize = Math.max(10, size * 0.038);
+      const fontSize = Math.max(12, size * 0.045);
       ctx.font = `bold ${fontSize}px 'DM Sans', sans-serif`;
 
       const words = prize.label.split(' ');
@@ -185,7 +190,7 @@ const Wheel = (() => {
     const size = canvas.clientWidth;
     const cx = size / 2;
     const cy = size / 2;
-    const r = size / 2 - 2;
+    const r = size / 2 - 1;
 
     ctx.clearRect(0, 0, size, size);
 

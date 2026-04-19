@@ -12,8 +12,8 @@
 
 .wheel-glow {
   position: absolute;
-  width: clamp(280px, 60vw, 420px);
-  height: clamp(280px, 60vw, 420px);
+  width: clamp(360px, 70vw, 520px);
+  height: clamp(360px, 70vw, 520px);
   border-radius: 50%;
   background: radial-gradient(circle, rgba(0, 163, 180, 0.22) 0%, rgba(0, 163, 180, 0.08) 42%, transparent 72%);
   pointer-events: none;
@@ -22,8 +22,8 @@
 
 .wheel-outer {
   position: relative;
-  width: clamp(300px, 70vw, 650px);
-  height: clamp(300px, 70vw, 650px);
+  width: clamp(380px, 80vw, 800px);
+  height: clamp(380px, 80vw, 800px);
 }
 
 .wheel-pointer {

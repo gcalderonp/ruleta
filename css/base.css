@@ -25,11 +25,13 @@ html {
 .wheel-logo {
   margin-top: 20px;
   display: flex;
-  justify-content: center; /* centra horizontalmente */
+  justify-content: center;
 }
 
 .wheel-logo img {
-  width: 950px; /* o el tamaño que quieras */
+  width: 100%;
+  max-width: 900px;
+  height: auto;
 }
 
 body {

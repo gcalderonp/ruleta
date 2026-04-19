@@ -120,6 +120,10 @@ nav {
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
 
+  .wheel-logo img {
+    max-width: 300px;
+  }
+  
   .nav-logo {
     gap: 0;
   }
@@ -143,7 +147,7 @@ nav {
     max-width: 320px;
     margin-bottom: 36px;
   }
-  
+
   .nav-links,
   .nav-cta {
     display: none;
