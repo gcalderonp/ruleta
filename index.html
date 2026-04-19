@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pepito & Co. — Ruleta de Premios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/navbar.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+  <link rel="stylesheet" href="css/wheel.css" />
+  <link rel="stylesheet" href="css/sections.css" />
+  <link rel="stylesheet" href="css/modal.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+</head>
+<body>
+
+  <!-- Background canvas -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- ── NAVBAR ── -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-mark">P</div>
+      <span class="nav-logo-text">Pepito <span>&amp;</span> Co.</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#ruleta">Ruleta</a></li>
+      <li><a href="#premios">Premios</a></li>
+      <li><a href="#nosotros">Nosotros</a></li>
+    </ul>
+    <a href="#ruleta" class="nav-cta">¡Jugar Ahora!</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="ruleta">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-dot"></div>
+      Pepito &amp; Co. — Promo 2025
+    </div>
+    <h1 class="hero-title">GIRA Y<br><span class="gold">GANA</span></h1>
+    <p class="hero-sub">¡Tu premio te está esperando! Gira la ruleta exclusiva de Pepito y descubre increíbles descuentos, regalos y beneficios para ti.</p>
+
+    <div class="wheel-stage">
+      <div class="wheel-glow"></div>
+      <div class="wheel-outer">
+        <div class="wheel-pointer"></div>
+        <div class="wheel-border"></div>
+        <canvas id="wheelCanvas"></canvas>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="spin-btn" id="spinBtn">&#9654;&nbsp;&nbsp;GIRAR RULETA</button>
+      <p class="spin-hint">Un intento por visita &mdash; Premios reales garantizados</p>
+    </div>
+  </section>
+
+  <!-- ── PREMIOS ── -->
+  <section class="prizes-section" id="premios">
+    <p class="section-label">Lo que puedes ganar</p>
+    <h2 class="section-title">NUESTROS PREMIOS</h2>
+    <div class="prizes-grid" id="prizesGrid"></div>
+  </section>
+
+  <!-- ── NOSOTROS ── -->
+  <section class="features-section" id="nosotros">
+    <p class="section-label">¿Por qué Pepito?</p>
+    <h2 class="section-title">CONFIANZA GARANTIZADA</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <div class="feature-title">Premios Reales</div>
+        <div class="feature-text">Todos los premios son válidos y canjeables en cualquiera de nuestras sucursales a nivel nacional.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Instantáneo</div>
+        <div class="feature-text">Sabrás tu premio al instante. Sin formularios, sin esperas, sin complicaciones.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-title">100% Seguro</div>
+        <div class="feature-text">Tu participación está protegida. No requerimos datos bancarios ni información sensible.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">Sin Letra Chica</div>
+        <div class="feature-text">Lo que ves es lo que recibes. Pepito cree en la transparencia total con sus clientes.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-logo">Pepito <span>&amp;</span> Co.</div>
+    <div class="footer-links">
+      <a href="#">Términos y Condiciones</a>
+      <a href="#">Política de Privacidad</a>
+      <a href="#">Contacto</a>
+      <a href="#">Sucursales</a>
+    </div>
+    <div class="footer-copy">&copy; 2025 Pepito &amp; Co. Todos los derechos reservados.</div>
+  </footer>
+
+  <!-- ── CONFETTI ── -->
+  <div class="confetti-container" id="confettiContainer"></div>
+
+  <!-- ── MODAL ── -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-card">
+      <div class="modal-stars">
+        <span class="modal-star">⭐</span>
+        <span class="modal-star">⭐</span>
+        <span class="modal-star">⭐</span>
+      </div>
+      <div class="modal-icon-wrap" id="modalIcon">🏆</div>
+      <div class="modal-tag">¡Felicidades!</div>
+      <div class="modal-title">Acabas de ganar</div>
+      <div class="modal-prize" id="modalPrize">Premio</div>
+      <div class="modal-stock-info" id="modalStock"></div>
+      <div class="modal-desc" id="modalDesc">Descripción del premio.</div>
+      <button class="modal-btn" id="modalClaimBtn">🎁 &nbsp;RECLAMAR PREMIO</button>
+      <button class="modal-secondary" id="modalCloseBtn">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- ── SCRIPTS ── -->
+  <script src="js/data.js"></script>
+  <script src="js/stock.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/wheel.js"></script>
+  <script src="js/prizes.js"></script>
+  <script src="js/confetti.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

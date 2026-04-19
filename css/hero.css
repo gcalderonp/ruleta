@@ -1,0 +1,129 @@
+/* ─────────────────────────────────────────
+   hero.css — Hero section & CTA
+───────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px clamp(16px, 5vw, 60px) 60px;
+  text-align: center;
+}
+
+/* Eyebrow badge */
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gold-dim);
+  border: 1px solid rgba(0, 163, 180, 0.24);
+  border-radius: 50px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  animation: fadeUp 0.6s ease both;
+}
+
+.eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: pulse 2s ease infinite;
+}
+
+/* Title */
+.hero-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(54px, 10vw, 110px);
+  line-height: 0.92;
+  letter-spacing: 3px;
+  color: var(--text);
+  margin-bottom: 20px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+
+.hero-title .gold {
+  color: var(--gold);
+}
+
+/* Subtitle */
+.hero-sub {
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--text-muted);
+  max-width: 480px;
+  line-height: 1.6;
+  margin-bottom: 52px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+/* Spin button & hint */
+.controls {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  animation: fadeUp 0.7s 0.4s ease both;
+}
+
+.spin-btn {
+  position: relative;
+  background: var(--gold);
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  padding: clamp(14px, 2vw, 18px) clamp(36px, 6vw, 64px);
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(18px, 3vw, 22px);
+  letter-spacing: 2px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 10px 34px rgba(0, 163, 180, 0.28);
+  animation: btnGlow 2.5s ease infinite;
+}
+
+.spin-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transition: left 0.55s;
+}
+
+.spin-btn:hover::before {
+  left: 150%;
+}
+
+.spin-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 44px rgba(0, 163, 180, 0.38);
+  animation: none;
+}
+
+.spin-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.spin-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  animation: none;
+}
+
+.spin-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
