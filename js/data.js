@@ -14,7 +14,7 @@ const PRIZES = [
   {
     label: 'Llaveros',
     desc:  'Llaveros prácticos y resistentes para llevar tus llaves con estilo.',
-    color:  '#1e2a26',
+    color:  '#1b6f79',
     border: '#00a3b4',
     icon:   '🔑',
     stock:  2
@@ -22,7 +22,7 @@ const PRIZES = [
   {
     label: 'Porta pasaportes',
     desc:  'Protege tu pasaporte con un diseño elegante y funcional para tus viajes.',
-    color:  '#3dbcca',
+    color:  '#00a3b4',
     border: '#1e2a26',
     icon:   '🛂',
     stock:  2
@@ -30,7 +30,7 @@ const PRIZES = [
   {
     label: 'Tag de maletas',
     desc:  'Identifica tu equipaje fácilmente con un tag resistente y moderno.',
-    color:  '#8a8a8d',
+    color:  '#1b6f79',
     border: '#1e2a26',
     icon:   '🏷️',
     stock:  2
@@ -38,7 +38,7 @@ const PRIZES = [
   {
     label: 'Bufandas',
     desc:  'Bufanda suave y cómoda, perfecta para cualquier ocasión.',
-    color:  '#1b6f79',
+    color:  '#00a3b4',
     border: '#e2ecee',
     icon: '🧣',
     stock:  2
@@ -46,7 +46,7 @@ const PRIZES = [
   {
     label: 'Cajas de chocolates',
     desc:  'Deliciosa selección de chocolates finos, ideal para disfrutar o regalar.',
-    color:  '#4aaeba',
+    color:  '#1b6f79',
     border: '#1e2a26',
     icon: '🍫',
     stock:  2
