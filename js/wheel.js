@@ -179,7 +179,7 @@ const Wheel = (() => {
     ctx.fillStyle = '#f5c518';
     ctx.fill();
 
-    ctx.font = `bold ${hubR * 0.72}px 'Bebas Neue', cursive`;
+    ctx.font = `bold ${hubR * 0.72}px 'Montserrat', sans-serif`;
     ctx.fillStyle = '#07090f';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
